@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("http://fonts.cdnfonts.com/css/open-sans");
+@import url("http://fonts.cdnfonts.com/css/galada");
+@import url("http://fonts.cdnfonts.com/css/mako");
+
+.galada-font {
+  font-family: "Galada", sans-serif;
+}
+
+.mako-font {
+  font-family: "Mako", sans-serif;
+}
+
+.open-sans-font {
+  font-family: "Open Sans";
+}
+
+.line-spacing-main {
+  letter-spacing: 0.255em;
+}
+
+.text-border-1 {
+  text-shadow: 0 0 3px black;
+}
+
+.line-spacing-small {
+  letter-spacing: 0.1em;
+}
+
+.flowbite-dropdown {
+  position: absolute;
+  inset: 0px auto auto 0px;
+  margin: 0px;
+  transform: translate(282px, 70px);
+}
