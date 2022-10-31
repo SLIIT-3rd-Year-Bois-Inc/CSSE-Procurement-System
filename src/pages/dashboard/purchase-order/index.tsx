@@ -1,44 +1,126 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { addDoc, collection, doc, getDocs, setDoc } from "firebase/firestore";
+import { DB } from "../../../firebase";
+import { useQuery } from "react-query";
+import { useDispatch, useSelector } from "react-redux";
+import { updatePOdraft } from "../../../redux/product-store";
+import { useLocation, useNavigate } from "react-router-dom";
+
+const po_schema = yup.object().shape({
+    item: yup.string().label("Item").required(),
+    quantity: yup.number().label("Quantity").required(),
+    site: yup.string().label("Site").required(),
+    delivery_date: yup.date().label("Delivery Date").required(),
+    bank_account: yup.string().label("Bank Account").required(),
+    note: yup.string().label("Note").required(),
+});
+
+interface ErrorContainerProps {
+    children: string
+}
+
+const ErrorContainer = ({ children }: ErrorContainerProps) => {
+    return (
+        <div className="p-1 text-red-500">{children}</div>
+    )
+}
 
 export default function PurchaseOrder() {
+    const {
+        register,
+        handleSubmit,
+        watch,
+        reset,
+        formState: { errors },
+    } = useForm({
+        resolver: yupResolver(po_schema),
+    });
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [selected_product, setSelectedProduct] = useState<any>(null);
+
+    const dispatch = useDispatch();
+    const order_state = useSelector((state:any) => state.product.draft)
+    console.log(order_state)
+    useEffect(() => {
+        reset(order_state);
+        setSelectedProduct(location.state as any);
+        watch((data, attr) => {
+            dispatch(updatePOdraft(data));
+        })
+    }, []);
+
+    const submit = async (data: any) => {
+        let orders_ref = collection(DB, "orders");
+        await addDoc(orders_ref, data);
+        dispatch(updatePOdraft({}));
+        reset({});
+        console.log("submit")
+        // TODO - Navigate somewhere
+    }
+
+    const getSites = async () => {
+        let sitesRef = collection(DB, "sites");
+        let sites = await getDocs(sitesRef);
+        
+        return sites.docs.map(doc => { return {...doc.data() as any, id:doc.id }})
+    }
+
+    const getAccounts = async () => {
+        let accountsRef = collection(DB, "bank_accounts");
+        let accounts = await getDocs(accountsRef);
+        return accounts.docs.map(doc => { return [doc.data().name, doc.id] })
+    }
+
+    let site_query = useQuery(["sites"], getSites)
+    let accounts_query = useQuery(["accounts"], getAccounts);
+
     return (
-        <div className="grid p-4">
+        <form onSubmit={handleSubmit(submit)} className="p-4 w-screen h-screen overflow-y-auto">
             <div className="font-bold">Items</div>
             <div>
                 <label htmlFor="item" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Item</label>
-                <select id="item" className="bg-gray-50 border border-[#0097d4] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option selected>Select</option>
+                <select value={(selected_product && selected_product.id ) ? selected_product.id : ""}  id="item" required {...register("item")} onClick={() => navigate("/products")} className="bg-gray-50 border border-[#0097d4] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    { (selected_product && selected_product.id ) ? <option selected value={selected_product.id}>{selected_product.name}</option>: <option selected value="">Select</option>}
                 </select>
+                <ErrorContainer>{errors.item?.message as string}</ErrorContainer>
                 <div className="flex flex-row">
                     <div className="mr-3">
                         <label htmlFor="quantity" className="block m-1 text-sm font-medium text-gray-900 dark:text-gray-300">Quantity</label>
-                        <input type="text" id="quantity" placeholder="Quantity" className="bg-gray-50 border border-[#0097d4] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                        <input type="number" id="quantity" {...register("quantity")} defaultValue={1} placeholder="Quantity" className="bg-gray-50 border border-[#0097d4] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                        <ErrorContainer>{errors.quantity?.message as string}</ErrorContainer>
                     </div>
                     <div>
-                        <label htmlFor="price" className="block m-1 text-sm font-medium text-gray-900 dark:text-gray-300">Price</label>
-                        <input type="text" id="price" className="bg-gray-50 border border-[#0097d4] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Price" required />
+                        <label htmlFor="price" className="block m-1 text-sm font-medium text-gray-900 dark:text-gray-300">Total Price</label>
+                        <input type="text" value={watch("quantity") * (selected_product ? selected_product.price : 0 )} id="price" className="bg-gray-50 border border-[#0097d4] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Price" />
                     </div>
                 </div>
 
                 <label htmlFor="description" className="block m-1 text-sm font-medium text-gray-900 dark:text-gray-400">Description</label>
-                <textarea id="description" placeholder="Description" rows={4} className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-[#0097d4] mb-3 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
-                <div className="mb-3 ml-2">
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-2xl mr-2">View Item</button>
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-2xl">Add Item</button>
+                <textarea disabled id="description" value={selected_product ? selected_product.description : "No description"} placeholder="Description" rows={4} className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-[#0097d4] mb-3 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
+                <div className="mb-3 ml-2" onClick={() => navigate("/products")}>
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-2xl mr-2">Set / Change Item</button>
                 </div>
             </div>
             <div className="font-bold mb-2">Site</div>
             <div className="mb-4">
-                <select id="countries" className="bg-gray-50 border border-[#0097d4] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                {site_query.isSuccess ? <select id="countries" {...register("site")} className="bg-gray-50 border border-[#0097d4] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option selected>Select a Site</option>
-                </select>
+                    {site_query.data ? site_query.data.map(d => <option key={d.id} value={d.id}>{d.name}</option>) : null}
+                </select> : null}
+                <ErrorContainer>{site_query.isError ? "There was a error fetching site. Please Reload" : errors.site?.message as string}</ErrorContainer>
             </div>
-            <div className="font-bold mb-2">Storage Unit</div>
+            {/* <div className="font-bold mb-2">Storage Unit</div>
             <div className="mb-4">
-                <select id="unit" className="bg-gray-50 border border-[#0097d4] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <select id="unit" {...register("storage_unit")} className="bg-gray-50 border border-[#0097d4] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option selected>Select a available unit</option>
                 </select>
-            </div>
+                <ErrorContainer>{errors.storage_unit?.message as string}</ErrorContainer>
+            </div> */}
             {/* <div className="font-bold mb-2">Supplier</div>
             <div className="mb-4">
                 <select id="supplier" className="bg-gray-50 border border-[#0097d4] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -47,21 +129,21 @@ export default function PurchaseOrder() {
             </div> */}
             <div className="font-bold mb-2">Delivery Date</div>
             <div className="mb-4">
-                <input type="date" id="first_name" className="bg-gray-50 border border-[#0097d4] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Delivery Date" required />
-            </div>
-            <div className="font-bold">Total</div>
-            <div className="mb-4">
-                <input type="text" className="bg-gray-50 border border-[#0097d4] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Total" required />
+                <input type="date" required id="first_name" {...register("delivery_date")} className="bg-gray-50 border border-[#0097d4] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Delivery Date" />
+                <ErrorContainer>{errors.delivery_date?.message as string}</ErrorContainer>
             </div>
             <div className="font-bold mb-2">Bank Account</div>
             <div className="mb-4">
-                <select id="accounts" className="bg-gray-50 border border-[#0097d4] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option selected>Choose a Account</option>
-                </select>
+                {site_query.isSuccess ? <select id="bank_account" {...register("bank_account")} className="bg-gray-50 border border-[#0097d4] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option selected>Select a Account</option>
+                    {accounts_query.data ? accounts_query.data.map(d => <option key={d[1]} value={d[1]}>{d[0]}</option>) : null}
+                </select> : null}
+                <ErrorContainer>{accounts_query.isError ? "There was a error fetching accounts. Please Reload" : errors.bank_account?.message as string}</ErrorContainer>
             </div>
             <div className="font-bold mb-2">Note</div>
             <div className="mb-4">
-                <textarea id="message" rows={4} className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-[#0097d4] focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Note"></textarea>
+                <textarea id="message" {...register("note")} rows={4} className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-[#0097d4] focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Note"></textarea>
+                <ErrorContainer>{errors.note?.message as string}</ErrorContainer>
             </div>
             <div></div>
             <div className="flex justify-center items-center flex-col">
@@ -69,8 +151,8 @@ export default function PurchaseOrder() {
                     <button className="text-blue-500 border-2 border-[#0097d4] hover:bg-blue-700 hover:text-white bg-white font-bold py-2 px-7 mr-2 rounded-2xl">Reset</button>
                     <button className="text-blue-500 border-2 border-[#0097d4] hover:bg-blue-700 hover:text-white font-bold py-2 px-7 rounded-2xl">Draft</button>
                 </div>
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-7 mr-2 rounded-2xl">Add Order</button>
+                <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-7 mr-2 rounded-2xl">Add Order</button>
             </div>
-        </div>
+        </form>
     )
 }

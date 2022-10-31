@@ -21,7 +21,8 @@ const selectProductSlice = createSlice({
             state.selected.active = !!action.payload;
         },
         updatePOdraft(state, action) {
-            state.draft = { ...state.draft, ...action.payload };
+            let new_state = {...action.payload};
+            state.draft = new_state;
         },
         addToItems(state, action) {
             let payload = action.payload;
@@ -38,5 +39,5 @@ const selectProductSlice = createSlice({
     }
 })
 
-export const { selectCurrentProduct, setActive, addToItems } = selectProductSlice.actions;
+export const { selectCurrentProduct, setActive, addToItems, updatePOdraft } = selectProductSlice.actions;
 export default selectProductSlice.reducer;

@@ -2,6 +2,7 @@ import { collection, endAt, getDocs, limit, orderBy, query, startAt, where } fro
 import React, { useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai"
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { DB } from "../../firebase";
 import { addToItems, selectCurrentProduct } from "../../redux/product-store";
 
@@ -9,7 +10,8 @@ export function Products() {
     const [searchText, setSearchText] = useState<string>("");
     const [products, setProducts] = useState<any>([]);
     const dispatch = useDispatch();
-    
+    const navigate = useNavigate();
+
     const onInput = (text: string) => {
         setSearchText(text);
         get_products(text.toLowerCase());
@@ -29,12 +31,16 @@ export function Products() {
         }
     }
 
+    const on_product_clicked = (data: any) => {
+        navigate("/order", { state: data })
+    }
+
     return (
         <div className="w-screen h-screen p-2">
             {/* Select products */}
             <SearchBar value={searchText} onChange={onInput} onClickSearch={() => get_products("")} />
             <div className="overflow-y-auto grid grid-cols-2 gap-2">
-                {products.map((product: any, index: number) => <Product key={index} name={product.name} onClick={() => localStorage.setItem('product_selected', product.id)} />)}
+                {products.map((product: any, index: number) => <Product key={index} name={product.name} onClick={() => on_product_clicked(product)} />)}
             </div>
         </div>
     )
