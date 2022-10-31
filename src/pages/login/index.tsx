@@ -39,7 +39,7 @@ export function Login() {
             <div>
                 <h2 className="text-3xl mb-[4em] mt-[5em] font-bold">Site Manager</h2>
             </div>
-            <form onSubmit={handleSubmit(login)} className="min-w-[30em] p-8 flex flex-col items-center">
+            <form onSubmit={handleSubmit(login)} className="p-9 w-full md:min-w-[30em] md:w-auto md:p-8 flex flex-col items-center">
                 <div className="pb-6 font-medium">Login with email and password</div>
                 <input type="text" {...register("email")} className="w-full p-3 rounded-lg" placeholder="Email"></input>
                 <div className="text-red-600 p-1">{errors.email?.message as string}</div>

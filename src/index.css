@@ -36,3 +36,9 @@
   margin: 0px;
   transform: translate(282px, 70px);
 }
+
+.html, #root, body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}

@@ -2,7 +2,7 @@ import React from "react";
 
 export default function PurchaseOrder() {
     return (
-        <div className="grid grid-cols-2 p-4">
+        <div className="grid p-4">
             <div className="font-bold">Items</div>
             <div>
                 <label htmlFor="item" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Item</label>
@@ -27,39 +27,39 @@ export default function PurchaseOrder() {
                     <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-2xl">Add Item</button>
                 </div>
             </div>
-            <div className="font-bold">Site</div>
+            <div className="font-bold mb-2">Site</div>
             <div className="mb-4">
                 <select id="countries" className="bg-gray-50 border border-[#0097d4] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option selected>Select a Site</option>
                 </select>
             </div>
-            <div className="font-bold">Storage Unit</div>
+            <div className="font-bold mb-2">Storage Unit</div>
             <div className="mb-4">
                 <select id="unit" className="bg-gray-50 border border-[#0097d4] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option selected>Select a available unit</option>
                 </select>
             </div>
-            <div className="font-bold">Supplier</div>
+            {/* <div className="font-bold mb-2">Supplier</div>
             <div className="mb-4">
                 <select id="supplier" className="bg-gray-50 border border-[#0097d4] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option selected>Supplier</option>
                 </select>
-            </div>
-            <div className="font-bold">Delivery Date</div>
+            </div> */}
+            <div className="font-bold mb-2">Delivery Date</div>
             <div className="mb-4">
-                <input type="date" id="first_name" className="bg-gray-50 border border-[#0097d4] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
+                <input type="date" id="first_name" className="bg-gray-50 border border-[#0097d4] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Delivery Date" required />
             </div>
             <div className="font-bold">Total</div>
             <div className="mb-4">
-                <input type="text" className="bg-gray-50 border border-[#0097d4] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
+                <input type="text" className="bg-gray-50 border border-[#0097d4] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Total" required />
             </div>
-            <div className="font-bold">Bank Account</div>
+            <div className="font-bold mb-2">Bank Account</div>
             <div className="mb-4">
                 <select id="accounts" className="bg-gray-50 border border-[#0097d4] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option selected>Choose a Account</option>
                 </select>
             </div>
-            <div className="font-bold">Note</div>
+            <div className="font-bold mb-2">Note</div>
             <div className="mb-4">
                 <textarea id="message" rows={4} className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-[#0097d4] focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Note"></textarea>
             </div>
