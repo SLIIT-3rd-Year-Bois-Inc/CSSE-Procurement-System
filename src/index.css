@@ -37,8 +37,9 @@
   transform: translate(282px, 70px);
 }
 
-.html, #root, body {
+.html,
+#root,
+body {
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
 }

@@ -45,8 +45,8 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "react-scripts start --host 0.0.0.0 && cra-append-sw --mode dev ./src/service-worker.js",
-    "build": "react-scripts build && cra-append-sw ./src/service-worker.js",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
