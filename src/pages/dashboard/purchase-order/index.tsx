@@ -122,7 +122,7 @@ export default function PurchaseOrder() {
   return (
     <form
       onSubmit={(e) => e.preventDefault()}
-      className="p-4 w-screen h-screen overflow-y-auto"
+      className="p-4 w-full h-full overflow-y-auto"
     >
       <div className="font-bold">Items</div>
       <div>

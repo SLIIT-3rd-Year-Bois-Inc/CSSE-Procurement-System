@@ -33,7 +33,6 @@ export default function Orders() {
     queryKey: QueryKey;
   }): Promise<any[]> => {
     const [_, status] = queryKey;
-    console.log(status);
     const ordersRef = collection(DB, DBCollections.ORDERS);
     const q = query(ordersRef, where("status", "==", status));
 
@@ -61,7 +60,6 @@ export default function Orders() {
         );
         const bank_data: any = bank.data();
         bank_map.set(doc_data.bank_account, bank_data);
-        console.log(bank_data, doc_data.bank_account);
         doc_data.bank_name = bank_data.name;
       }
 
@@ -71,9 +69,13 @@ export default function Orders() {
       } else {
         const site = await getDoc(doc(DB, DBCollections.SITES, doc_data.site));
         const site_data: any = site.data();
-        console.log(site_data);
-        site_map.set(doc_data.site, site_data);
-        doc_data.site_name = site_data.name;
+
+        if(site_data && site_data.name) {
+          site_map.set(doc_data.site, site_data);
+          doc_data.site_name = site_data.name;
+        } else {
+          doc_data.site_name = "[Site does not exist]"
+        }
       }
 
       // Join item collection
@@ -84,7 +86,6 @@ export default function Orders() {
           doc(DB, DBCollections.PRODUCTS, doc_data.item)
         );
         const item_data: any = item.data();
-        console.log(item_data);
         product_map.set(doc_data.item, item_data);
         doc_data.item_name = item_data.name;
       }
