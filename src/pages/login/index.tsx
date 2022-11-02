@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { loginSchema } from "../../schema";
+import { useNavigate } from "react-router-dom";
 
 export function Login() {
   const {
@@ -14,10 +15,12 @@ export function Login() {
     resolver: yupResolver(loginSchema),
   });
 
+  const navigate = useNavigate();
+
   const login = async (data: any) => {
     try {
       await signInWithEmailAndPassword(Auth, data.email, data.password);
-      // TODO - Navigate to dashboard
+      navigate("/delivery-tracking");
     } catch (e) {
       console.error(e);
     }

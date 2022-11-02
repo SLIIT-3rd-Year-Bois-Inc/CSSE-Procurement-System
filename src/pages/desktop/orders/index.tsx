@@ -4,25 +4,24 @@ import {
   getDoc,
   getDocs,
   query,
-  updateDoc,
   where,
 } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   AiFillQuestionCircle,
   AiFillCheckCircle,
   AiFillCloseCircle,
 } from "react-icons/ai";
 import {
-  isError,
   QueryKey,
   useMutation,
   useQuery,
   useQueryClient,
 } from "react-query";
+import { changeState } from "../../../api";
 import { SearchBar } from "../../../components/searchbar";
 import { DBCollections, OrderStates } from "../../../definitions";
-import { Auth, DB } from "../../../firebase";
+import { DB } from "../../../firebase";
 import { toDateOnly } from "../../../utils/date-time";
 import { capitalFirstLetter } from "../../../utils/text";
 
@@ -95,13 +94,6 @@ export default function Orders() {
 
     console.log(transformed);
     return transformed;
-  };
-
-  const changeState = async (data: { order_id: string; status: string }) => {
-    const docRef = doc(DB, DBCollections.ORDERS, data.order_id);
-    await updateDoc(docRef, {
-      status: data.status,
-    });
   };
 
   const { mutate } = useMutation(changeState, {

@@ -1,20 +1,15 @@
 import {
   collection,
-  endAt,
   getDocs,
   limit,
-  orderBy,
   query,
-  startAt,
   where,
 } from "firebase/firestore";
 import React, { useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { SearchBar } from "../../components/searchbar";
 import { DB } from "../../firebase";
-import { addToItems, selectCurrentProduct } from "../../redux/product-store";
 
 export function Products() {
   const [searchText, setSearchText] = useState<string>("");
