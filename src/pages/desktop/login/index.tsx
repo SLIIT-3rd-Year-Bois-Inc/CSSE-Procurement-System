@@ -34,7 +34,7 @@ export default function ProcurementLogin() {
     }
   }, []);
   return (
-    <div className="w-screen h-screen flex justify-center items-center">
+    <div className="w-full h-full flex justify-center items-center">
       <div className="w-[30em] border-2 rounded-lg border-[#0097d4]">
         <div className="pt-8">
           <h2 className="text-3xl text-center font-bold">Procurement</h2>

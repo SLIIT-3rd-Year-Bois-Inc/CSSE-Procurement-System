@@ -5,7 +5,7 @@ import TopBar from "../top-bar";
 
 export default function Dashboard() {
   return (
-    <div className="w-screen h-screen flex flex-row">
+    <div className="w-full h-full flex flex-row">
       <SideBar />
       <div className="flex-grow">
         <TopBar />

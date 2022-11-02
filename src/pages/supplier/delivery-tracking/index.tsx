@@ -22,7 +22,7 @@ export default function SupplierDeliveryTracking() {
     }
 
     return (
-        <div className="w-screen h-screen p-4 flex flex-col">
+        <div className="w-full h-full p-4 flex flex-col">
             <div className="mb-4 flex gap-1 overflow-x-auto text-white">
                 <Chip onClick={() => setStatus(OrderStates.APPROVED)} active={status === OrderStates.APPROVED}>Pending</Chip>
                 <Chip onClick={() => setStatus(OrderStates.ACCEPTED)} active={status === OrderStates.ACCEPTED}>Ongoing</Chip>

@@ -33,7 +33,7 @@ export function Login() {
     }
   }, []);
   return (
-    <div className="w-screen h-screen flex flex-col items-center">
+    <div className="w-full h-full flex flex-col items-center">
       <div>
         <h2 className="text-3xl mb-[4em] mt-[5em] font-bold">Site Manager</h2>
       </div>

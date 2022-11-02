@@ -47,7 +47,7 @@ export function Products() {
   };
 
   return (
-    <div className="w-screen h-screen p-2">
+    <div className="w-full h-full p-2">
       {/* Select products */}
       <SearchBar
         value={searchText}
@@ -55,7 +55,7 @@ export function Products() {
         onChangeInput={onInput}
         onClickSearch={() => get_products("")}
       />
-      <div className="overflow-y-auto grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 gap-2">
         {products.map((product: any, index: number) => (
           <Product
             key={index}
