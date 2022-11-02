@@ -22,4 +22,11 @@ enum Counters {
   ORDER_COUNTER = "order-counter"
 }
 
+export enum DeliveryStates {
+  ACCEPTED = "accepted",
+  RETURNED = "returned",
+  COMPLETED = "completed",
+  NOT_INITIATED = "not_initiated"
+}
+
 export { OrderStates, DBCollections, Counters };
