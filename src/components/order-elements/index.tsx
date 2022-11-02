@@ -3,6 +3,7 @@ import { OrderStates } from "../../definitions";
 import { toDateOnly, toDateTime } from "../../utils/date-time";
 import { AiFillCheckCircle } from "react-icons/ai";
 import { BsCircleFill } from "react-icons/bs";
+import OrderElementWithDeliveries from "../order-element-with-deliveries";
 
 interface OrderElementProps {
     item?: string,
@@ -29,7 +30,7 @@ export default function OrderElement({ item, quantity, total, delivery_date, num
             <div className="flex-grow"></div>
             <div>
                 {
-                    ((state === OrderStates.APPROVED) && !siteManager) &&
+                    ((state === OrderStates.APPROVED) && siteManager) &&
                     <AiFillCheckCircle
                         size={40}
                         color="#75f94c"
@@ -37,7 +38,7 @@ export default function OrderElement({ item, quantity, total, delivery_date, num
                     />
                 }
                 {
-                    ((state === OrderStates.APPROVED) && siteManager) &&
+                    ((state === OrderStates.APPROVED) && !siteManager) &&
                     <div className="flex flex-col gap-2">
                         <button
                             onClick={() => { (onChangeState && order_id) && onChangeState(OrderStates.ACCEPTED, order_id) }}

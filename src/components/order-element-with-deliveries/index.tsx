@@ -3,6 +3,7 @@ import { OrderStates } from "../../definitions";
 import { toDateOnly, toDateTime } from "../../utils/date-time";
 import { AiFillCheckCircle } from "react-icons/ai";
 import { BsCircleFill } from "react-icons/bs";
+import Delivery from "../delivery";
 
 interface OrderElementProps {
     item?: string,
@@ -13,9 +14,10 @@ interface OrderElementProps {
     onDeliveryStateChange?: (state: OrderStates, order_id: string, delivery_id: string) => void;
     order_id?: string;
     deliveries?: any[];
+    siteManager?: boolean;
 }
 
-export default function OrderElementWithDeliveries({ item, quantity, number, state, onChangeState, order_id, deliveries }: OrderElementProps) {
+export default function OrderElementWithDeliveries({ item, quantity, number,siteManager, state, onChangeState, order_id, deliveries }: OrderElementProps) {
     return (
         <div className="p-4 border-2 border-[#0097d4] rounded-lg flex flex-col">
             <div className="flex-grow">
@@ -28,6 +30,13 @@ export default function OrderElementWithDeliveries({ item, quantity, number, sta
                 {
                     (!deliveries || deliveries.length == 0) && <div className="text-center">No deliveries yet.</div>
                 }
+                <div className="w-full flex flex-col gap-4 mt-2">
+                {
+                    (!!deliveries) && deliveries.map((d: any, index: number) => {
+                        return <Delivery siteManager={siteManager} {...d} eta={d.seconds} index={index + 1}/>
+                    })
+                }
+                </div>
                 <button className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded-2xl">
                     Mark As Completed
                 </button>

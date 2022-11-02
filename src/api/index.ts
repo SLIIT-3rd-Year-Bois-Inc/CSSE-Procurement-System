@@ -6,7 +6,7 @@ import { DB } from "../firebase";
 
 export const getAllOrders = async ({ queryKey }: { queryKey: QueryKey }) => {
     let orderRef = collection(DB, DBCollections.ORDERS);
-    let [_, state] = queryKey;
+    let [_, state, resolve_deliveries] = queryKey;
 
     let q = query(orderRef, where("status", "==", state));
     let res = await getDocs(q);
@@ -29,7 +29,20 @@ export const getAllOrders = async ({ queryKey }: { queryKey: QueryKey }) => {
             product_map.set(doc_data.item, item_data);
             doc_data.item_name = item_data.name;
         }
-        new_data.push(doc_data);
+        if (resolve_deliveries) {
+            // Resolve Deliveries
+            const delivery_ref = collection(DB, DBCollections.ORDERS, docc.id, DBCollections.DELIVERIES);
+
+            let delivery_docs = await getDocs(delivery_ref);
+
+            doc_data.deliveries = [];
+
+            for (const d of delivery_docs.docs) {
+                doc_data.deliveries.push(d.data());
+            }
+
+            new_data.push(doc_data);
+        }
     }
 
     return new_data;
@@ -48,22 +61,22 @@ export const getOrder = async ({ queryKey }: { queryKey: QueryKey }): Promise<Do
     const document = doc(DB, DBCollections.ORDERS, order_id);
     const data = (await getDoc(document)).data();
 
-    if(!data) {
+    if (!data) {
         throw new OrderDoesNotExist();
     }
 
     // Merge with item 
-    try{
-        const item = doc(DB,DBCollections.PRODUCTS, data.item);
+    try {
+        const item = doc(DB, DBCollections.PRODUCTS, data.item);
         const item_data = await (await getDoc(item)).data();
 
-        if(!item_data) {
+        if (!item_data) {
             data.item_name = "[Item Does not exist anymore]"
             return data;
         }
 
         data.item_name = item_data.name;
-    }catch(e) {
+    } catch (e) {
         data.item_name = "[Error fetching item name]"
     }
 
@@ -71,13 +84,13 @@ export const getOrder = async ({ queryKey }: { queryKey: QueryKey }): Promise<Do
     const delivery_ref = collection(DB, DBCollections.ORDERS, order_id, DBCollections.DELIVERIES);
 
     let delivery_docs = await getDocs(delivery_ref);
-    
+
     data.deliveries = [];
 
-    for(const d of delivery_docs.docs){
+    for (const d of delivery_docs.docs) {
         data.deliveries.push(d.data());
     }
-    
+
     return data;
 }
 
