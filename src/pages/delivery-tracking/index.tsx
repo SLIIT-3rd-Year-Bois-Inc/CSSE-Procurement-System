@@ -43,7 +43,7 @@ export default function DeliveryTracking() {
 
     return (
         <div className="w-full h-full p-4 flex flex-col">
-            <div className="mb-4 flex gap-1 overflow-x-auto text-white">
+            <div className="mb-4 h-fit flex-shrink-0 flex gap-1 overflow-x-auto text-white">
                 <Chip onClick={() => setStatus(OrderStates.DRAFT)} active={status === OrderStates.DRAFT}>Draft</Chip>
                 <Chip onClick={() => setStatus(OrderStates.PENDING)} active={status === OrderStates.PENDING}>Pending</Chip>
                 <Chip onClick={() => setStatus(OrderStates.APPROVED)} active={status === OrderStates.APPROVED}>Approved</Chip>

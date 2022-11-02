@@ -13,16 +13,33 @@ import ManageOrder from "../pages/supplier/manage-order";
 
 export function MainRouter() {
   const navigate = useNavigate();
+  const apply_mobile_styles = () => {
+    document.head.innerHTML = document.head.innerHTML + `
+      <style type="text/css">
+        *{
+          -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+        }
+      </style>
+    `
+  }
 
   useEffect(() => {
     if (window.matchMedia('(display-mode: standalone)').matches) {
       console.log('display-mode is standalone');
       navigate("/login");
+      apply_mobile_styles();
     }
 
     window.addEventListener('appinstalled', (evt) => {
       console.log('a2hs installed');
       navigate("/login");
+      apply_mobile_styles();
     });
   }, []);
 
@@ -30,12 +47,13 @@ export function MainRouter() {
     <Routes>
       <Route element={<MobileTopBar />}>
         <Route path="/order" element={<PurchaseOrder />} />
+        <Route path="/delivery-tracking" element={<DeliveryTracking />} />
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/products" element={<Products />} />
       <Route path="/supplier/delivery-tracking" element={<SupplierDeliveryTracking />} />
       <Route path="/supplier/orders/:id" element={<ManageOrder />} />
-      <Route path="/delivery-tracking" element={<DeliveryTracking />} />
+
       <Route path="/procurement/login" element={<ProcurementLogin />} />
       <Route path="/procurement" element={<Dashboard />}>
         <Route path="order" element={<Orders />} />
