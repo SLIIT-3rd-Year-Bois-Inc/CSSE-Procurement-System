@@ -1,4 +1,4 @@
-import { collection, doc, DocumentData, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, doc, DocumentData, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { QueryKey } from "react-query";
 import { DBCollections } from "../definitions";
 import { OrderDoesNotExist } from "../errors";
@@ -67,6 +67,21 @@ export const getOrder = async ({ queryKey }: { queryKey: QueryKey }): Promise<Do
         data.item_name = "[Error fetching item name]"
     }
 
+    // Get all deliveries
+    const delivery_ref = collection(DB, DBCollections.ORDERS, order_id, DBCollections.DELIVERIES);
+
+    let delivery_docs = await getDocs(delivery_ref);
+    
+    data.deliveries = [];
+
+    for(const d of delivery_docs.docs){
+        data.deliveries.push(d.data());
+    }
     
     return data;
+}
+
+export const addDelivery = async (data: any) => {
+    let delivery_ref = collection(DB, DBCollections.ORDERS, data.order_id, DBCollections.DELIVERIES);
+    await addDoc(delivery_ref, data);
 }

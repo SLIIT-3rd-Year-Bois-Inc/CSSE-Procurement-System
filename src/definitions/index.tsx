@@ -15,7 +15,8 @@ enum DBCollections {
   PRODUCTS = "products",
   SITES = "sites",
   BANK_ACCOUNTS = "bank_accounts",
-  COUNTERS = "counters"
+  COUNTERS = "counters",
+  DELIVERIES = "deliveries"
 }
 
 enum Counters {
