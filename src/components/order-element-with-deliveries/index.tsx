@@ -1,10 +1,8 @@
 import React from "react";
-import { OrderStates } from "../../definitions";
-import { toDateOnly, toDateTime } from "../../utils/date-time";
-import { AiFillCheckCircle } from "react-icons/ai";
-import { BsCircleFill } from "react-icons/bs";
+import { DeliveryStates, OrderStates } from "../../definitions";
 import Delivery from "../delivery";
-
+import { useMutation, useQueryClient } from "react-query";
+import { updateDelivery } from "../../api";
 interface OrderElementProps {
     item?: string,
     quantity?: number,
@@ -17,7 +15,18 @@ interface OrderElementProps {
     siteManager?: boolean;
 }
 
-export default function OrderElementWithDeliveries({ item, quantity, number,siteManager, state, onChangeState, order_id, deliveries }: OrderElementProps) {
+export default function OrderElementWithDeliveries({ item, quantity, number, siteManager, state, onChangeState, order_id, deliveries }: OrderElementProps) {
+    const qc = useQueryClient();
+    const delivery_mutation = useMutation(updateDelivery, {
+        onSuccess: () => {
+            qc.invalidateQueries(["orders"]);
+        }
+    });
+
+    if(!order_id) {
+        return <div className="p-4 border-2 border-[#0097d4] rounded-lg flex flex-col">Failed to load this order</div>
+    }
+
     return (
         <div className="p-4 border-2 border-[#0097d4] rounded-lg flex flex-col">
             <div className="flex-grow">
@@ -33,7 +42,7 @@ export default function OrderElementWithDeliveries({ item, quantity, number,site
                 <div className="w-full flex flex-col gap-4 mt-2">
                 {
                     (!!deliveries) && deliveries.map((d: any, index: number) => {
-                        return <Delivery siteManager={siteManager} {...d} eta={d.seconds} index={index + 1}/>
+                        return <Delivery siteManager={siteManager} onChangeState={(state, delivery_id) => { delivery_mutation.mutate({ order_id, delivery_id, data: { status: state } })}} {...d} eta={d.eta.seconds} index={index + 1} id={d.id} status={d.status}/>
                     })
                 }
                 </div>

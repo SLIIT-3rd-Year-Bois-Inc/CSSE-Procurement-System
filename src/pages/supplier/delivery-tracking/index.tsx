@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { changeState, getAllOrders } from "../../../api";
 import Chip from "../../../components/chip";
-import OrderElementWithDeliveries from "../../../components/order-element-with-deliveries";
 import OrderElement from "../../../components/order-elements";
 import { OrderStates } from "../../../definitions";
 

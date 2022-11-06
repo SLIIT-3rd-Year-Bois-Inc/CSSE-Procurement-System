@@ -3,7 +3,6 @@ import { OrderStates } from "../../definitions";
 import { toDateOnly, toDateTime } from "../../utils/date-time";
 import { AiFillCheckCircle } from "react-icons/ai";
 import { BsCircleFill } from "react-icons/bs";
-import OrderElementWithDeliveries from "../order-element-with-deliveries";
 
 interface OrderElementProps {
     item?: string,

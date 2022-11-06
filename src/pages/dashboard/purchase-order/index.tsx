@@ -45,7 +45,7 @@ export default function PurchaseOrder() {
 
   const dispatch = useDispatch();
   const order_state = useSelector((state: any) => state.product.draft);
-  console.log(order_state);
+  // console.log(order_state);
   useEffect(() => {
     reset(order_state);
     setSelectedProduct(location.state as any);

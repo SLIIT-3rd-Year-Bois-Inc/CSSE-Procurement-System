@@ -1,6 +1,6 @@
 import { addDoc, collection, doc, DocumentData, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { QueryKey } from "react-query";
-import { DBCollections } from "../definitions";
+import { DBCollections, DeliveryStates } from "../definitions";
 import { OrderDoesNotExist } from "../errors";
 import { DB } from "../firebase";
 
@@ -25,7 +25,7 @@ export const getAllOrders = async ({ queryKey }: { queryKey: QueryKey }) => {
                 doc(DB, DBCollections.PRODUCTS, doc_data.item)
             );
             const item_data: any = item.data();
-            console.log(item_data);
+            // console.log(item_data);
             product_map.set(doc_data.item, item_data);
             doc_data.item_name = item_data.name;
         }
@@ -38,11 +38,12 @@ export const getAllOrders = async ({ queryKey }: { queryKey: QueryKey }) => {
             doc_data.deliveries = [];
 
             for (const d of delivery_docs.docs) {
-                doc_data.deliveries.push(d.data());
+                let delivery = d.data();
+                delivery.id = d.id;
+                doc_data.deliveries.push(delivery);
             }
-
-            new_data.push(doc_data);
         }
+        new_data.push(doc_data);
     }
 
     return new_data;
@@ -97,4 +98,9 @@ export const getOrder = async ({ queryKey }: { queryKey: QueryKey }): Promise<Do
 export const addDelivery = async (data: any) => {
     let delivery_ref = collection(DB, DBCollections.ORDERS, data.order_id, DBCollections.DELIVERIES);
     await addDoc(delivery_ref, data);
+}
+
+export const updateDelivery = async (data: { order_id: string, delivery_id:string; data:any }) => {
+    let delivery_ref = doc(DB, DBCollections.ORDERS, data.order_id, DBCollections.DELIVERIES, data.delivery_id);
+    await updateDoc(delivery_ref, data);
 }

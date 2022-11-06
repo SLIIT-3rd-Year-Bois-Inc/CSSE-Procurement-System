@@ -10,7 +10,7 @@ export function useAuth() {
 
   useEffect(() => {
     for (let i = 0; i < protected_routes.length; i++) {
-      console.log(protected_routes);
+      // console.log(protected_routes);
       if (matchPath(protected_routes[i], pathname)) {
         if (!sessionStorage.getItem("customer")) {
           navigate("/customer/login");
