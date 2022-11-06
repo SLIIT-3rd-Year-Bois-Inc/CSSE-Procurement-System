@@ -1,7 +1,7 @@
 import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import React, { useState } from "react";
 import { QueryKey, useQuery } from "react-query";
-import { getAllOrders } from "../../api";
+import { getAllOrders, updateDelivery } from "../../api";
 import Chip from "../../components/chip";
 import OrderElementWithDeliveries from "../../components/order-element-with-deliveries";
 import OrderElement from "../../components/order-elements";

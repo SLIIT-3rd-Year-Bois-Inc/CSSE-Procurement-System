@@ -101,6 +101,7 @@ export const addDelivery = async (data: any) => {
 }
 
 export const updateDelivery = async (data: { order_id: string, delivery_id:string; data:any }) => {
+    console.log('update', data);
     let delivery_ref = doc(DB, DBCollections.ORDERS, data.order_id, DBCollections.DELIVERIES, data.delivery_id);
-    await updateDoc(delivery_ref, data);
+    await updateDoc(delivery_ref, data.data);
 }

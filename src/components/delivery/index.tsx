@@ -1,8 +1,9 @@
 import { DeliveryStates, OrderStates } from "../../definitions";
-
+import { toDateTime, toDateOnly } from "../../utils/date-time";
 interface DeliveryProps {
     eta?: string;
-    quantity?: number;
+    accepted?: number;
+    returned?: number;
     accepted_quantity?: number;
     status?: DeliveryStates;
     index?: number;
@@ -11,14 +12,15 @@ interface DeliveryProps {
     id?:string;
 }
 
-export default function Delivery({ eta, quantity, accepted_quantity, status, index, siteManager, onChangeState, id }: DeliveryProps) {
+export default function Delivery({ eta, accepted, returned, accepted_quantity, status, index, siteManager, onChangeState, id }: DeliveryProps) {
     return (
         <div className="p-4 justify-center border-2 border-[#0097d4] rounded-lg flex flex-row">
             <div className="flex-grow">
                 <div className="font-bold">Delivery #{String(index ?? 0).padStart(4, '0')}</div>
-                <div>Date : {eta}</div>
+                <div>Date : {toDateOnly(toDateTime(parseInt(eta ?? "")))}</div>
                 <div>Sent Quantity : {accepted_quantity}</div>
-                <div>Accepted Quantity : {quantity}</div>
+                <div>Accepted Quantity : {accepted}</div>
+                <div>Returned Quantity : {returned}</div>
                 <div>Status : {status}</div>
             </div>
             <div className="flex-grow"></div>
