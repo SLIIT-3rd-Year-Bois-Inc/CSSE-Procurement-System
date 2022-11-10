@@ -11,6 +11,7 @@ import { Login } from "../pages/login";
 import { Products } from "../pages/products";
 import SupplierDeliveryTracking from "../pages/supplier/delivery-tracking";
 import ManageOrder from "../pages/supplier/manage-order";
+import Payment from "../pages/desktop/payment";
 
 export function MainRouter() {
   const navigate = useNavigate();
@@ -34,16 +35,19 @@ export function MainRouter() {
 
   useEffect(() => {
     if (window.matchMedia("(display-mode: standalone)").matches) {
-      console.log("display-mode is standalone");
       navigate("/login");
       apply_mobile_styles();
     }
-
-    window.addEventListener("appinstalled", (evt) => {
-      console.log("a2hs installed");
+    const app_installed = () => {
       navigate("/login");
       apply_mobile_styles();
-    });
+    };
+
+    window.addEventListener("appinstalled", app_installed);
+
+    return () => {
+      window.removeEventListener("appinstalled", app_installed);
+    };
   }, []);
 
   return (
@@ -66,6 +70,7 @@ export function MainRouter() {
       <Route path="/procurement" element={<Dashboard />}>
         <Route path="order" element={<Orders />} />
         <Route path="invoice/:id" element={<Invoice />} />
+        <Route path="payment/:id" element={<Payment />} />
       </Route>
       <Route path="*" element={<Navigate to="/procurement/login" replace />} />
     </Routes>

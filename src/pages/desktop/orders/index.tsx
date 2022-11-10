@@ -18,7 +18,7 @@ import { changeState } from "../../../api";
 import { SearchBar } from "../../../components/searchbar";
 import { DBCollections, OrderStates } from "../../../definitions";
 import { DB } from "../../../firebase";
-import { toDateOnly } from "../../../utils/date-time";
+import { toDateOnly, toDateTime } from "../../../utils/date-time";
 import { capitalFirstLetter } from "../../../utils/text";
 
 export default function Orders() {
@@ -102,7 +102,10 @@ export default function Orders() {
   const [status, setStatus] = useState<OrderStates>(OrderStates.PENDING);
   const { data, isLoading, isSuccess, isFetching } = useQuery(
     ["orders", status],
-    getAllOrders
+    getAllOrders,
+    {
+      refetchOnWindowFocus: false,
+    }
   );
 
   const show_column = status === OrderStates.PENDING;
@@ -132,6 +135,7 @@ export default function Orders() {
             <option value={OrderStates.RETUREND}>Returned</option>
             <option value={OrderStates.REJECTED}>Rejected</option>
             <option value={OrderStates.COMPLETED}>Completed</option>
+            <option value={OrderStates.PAID}>Paid</option>
           </select>
         </div>
         <div className="p-2">
@@ -174,7 +178,7 @@ export default function Orders() {
                       <td>{d.site_name}</td>
                       <td>{d.site_name}</td>
                       <td>{d.item_name}</td>
-                      <td>{toDateOnly(new Date(d.delivery_date.seconds))}</td>
+                      <td>{toDateOnly(toDateTime(d.delivery_date.seconds))}</td>
                       <td>{d.bank_name}</td>
                       <td>{d.total}</td>
                       {show_column && (

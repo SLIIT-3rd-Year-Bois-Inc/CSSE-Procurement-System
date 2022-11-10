@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useMutation, useQuery } from "react-query";
-import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { getOrder, updateOrder } from "../../../api";
+import { OrderStates } from "../../../definitions";
 
-export default function Invoice() {
+export default function Payment() {
   const { id } = useParams();
   const { data, refetch } = useQuery(["order", id], getOrder);
   const update_order = useMutation(updateOrder, {
@@ -12,6 +12,12 @@ export default function Invoice() {
       refetch();
     },
   });
+
+  const pay = () => {
+    if (id) {
+      updateOrder({ order_id: id, data: { status: OrderStates.PAID } });
+    }
+  };
 
   const [add, setAdd] = useState<number>(0);
   const [deduct, setDeduct] = useState<number>(0);
@@ -27,7 +33,7 @@ export default function Invoice() {
   return (
     <div>
       <div className="my-2 ml-8 mt-10 font-bold text-3xl text-center">
-        Invoice
+        Payment
       </div>
       <div className="ml-8">
         <div className="flex flex-col gap-2 mt-8 text-lg">
@@ -93,12 +99,12 @@ export default function Invoice() {
       </div>
       <div className="w-full flex flex-row">
         <div className="flex-grow"></div>
-        <Link
-          to={`/procurement/payment/${id}`}
+        <button
+          onClick={pay}
           className="mx-12 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-7 rounded-2xl"
         >
-          Next
-        </Link>
+          Pay
+        </button>
       </div>
     </div>
   );

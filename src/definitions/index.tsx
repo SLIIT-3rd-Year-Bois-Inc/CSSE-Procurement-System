@@ -7,6 +7,7 @@ enum OrderStates {
   REJECTED = "rejected",
   COMPLETED = "completed",
   DRAFT = "draft",
+  PAID = "paid",
 }
 
 enum DBCollections {
