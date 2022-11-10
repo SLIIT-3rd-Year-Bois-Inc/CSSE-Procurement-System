@@ -1,3 +1,4 @@
+// Defines all the states a order can have
 enum OrderStates {
   PENDING = "pending",
   APPROVED = "approved",
@@ -10,6 +11,7 @@ enum OrderStates {
   PAID = "paid",
 }
 
+// Defines all the collection names in the database
 enum DBCollections {
   USERS = "users",
   ORDERS = "orders",
@@ -21,10 +23,12 @@ enum DBCollections {
   SUPPLIERS = "suppliers",
 }
 
+// Defines all the counter collections used in the database
 enum Counters {
   ORDER_COUNTER = "order-counter",
 }
 
+// Defines all the states a delivery can have
 export enum DeliveryStates {
   ACCEPTED = "accepted",
   RETURNED = "returned",

@@ -15,6 +15,8 @@ import Payment from "../pages/desktop/payment";
 
 export function MainRouter() {
   const navigate = useNavigate();
+
+  // These are the styles required in the standalone (mobile / PWA) version of the app
   const apply_mobile_styles = () => {
     document.head.innerHTML =
       document.head.innerHTML +
@@ -34,6 +36,7 @@ export function MainRouter() {
   };
 
   useEffect(() => {
+    // If the app runs in the standalone / PWA mode, applies the specific styles and conditions
     if (window.matchMedia("(display-mode: standalone)").matches) {
       navigate("/login");
       apply_mobile_styles();
@@ -43,9 +46,11 @@ export function MainRouter() {
       apply_mobile_styles();
     };
 
+    // Apply PWA specific logic when it was installed
     window.addEventListener("appinstalled", app_installed);
 
     return () => {
+      // Remove event listeners when done
       window.removeEventListener("appinstalled", app_installed);
     };
   }, []);

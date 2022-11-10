@@ -1,3 +1,7 @@
+/**
+ * This file defines all the API methods called to the firebase
+ */
+
 import {
   addDoc,
   collection,
@@ -15,6 +19,9 @@ import { DBCollections } from "../definitions";
 import { OrderDoesNotExist } from "../errors";
 import { DB } from "../firebase";
 
+/**
+ * Gets all orders with the given criteria
+ */
 export const getAllOrders = async ({ queryKey }: { queryKey: QueryKey }) => {
   let orderRef = collection(DB, DBCollections.ORDERS);
   let [_, state, resolve_deliveries] = queryKey;
@@ -34,7 +41,6 @@ export const getAllOrders = async ({ queryKey }: { queryKey: QueryKey }) => {
     } else {
       const item = await getDoc(doc(DB, DBCollections.PRODUCTS, doc_data.item));
       const item_data: any = item.data();
-      // console.log(item_data);
       product_map.set(doc_data.item, item_data);
       doc_data.item_name = item_data.name;
     }
@@ -63,6 +69,9 @@ export const getAllOrders = async ({ queryKey }: { queryKey: QueryKey }) => {
   return new_data;
 };
 
+/**
+ * Changes the status field of a given order
+ */
 export const changeState = async (data: {
   order_id: string;
   status: string;
@@ -73,6 +82,10 @@ export const changeState = async (data: {
   });
 };
 
+/**
+ * Gets the all details of the given order_id.
+ * To be used with React Query
+ */
 export const getOrder = async ({
   queryKey,
 }: {
@@ -135,6 +148,9 @@ export const getOrder = async ({
   return data;
 };
 
+/**
+ * Adds a delivery to the delivery collection
+ */
 export const addDelivery = async (data: any) => {
   let delivery_ref = collection(
     DB,
@@ -145,6 +161,9 @@ export const addDelivery = async (data: any) => {
   await addDoc(delivery_ref, data);
 };
 
+/**
+ * Updates a delivery with the given data of the given delivery and order_id
+ */
 export const updateDelivery = async (data: {
   order_id: string;
   delivery_id: string;
@@ -161,11 +180,17 @@ export const updateDelivery = async (data: {
   await updateDoc(delivery_ref, data.data);
 };
 
+/**
+ * Deletes the order of the given ID
+ */
 export const deleteOrder = async (data: { order_id: string }) => {
   let order_ref = doc(DB, DBCollections.ORDERS, data.order_id);
   await deleteDoc(order_ref);
 };
 
+/**
+ * Deletes the delivery of the given Order ID and the Delivery ID
+ */
 export const deleteDelivery = async (data: {
   order_id: string;
   delivery_id: string;
@@ -180,6 +205,9 @@ export const deleteDelivery = async (data: {
   await deleteDoc(delivery_ref);
 };
 
+/**
+ * Updates a order with the given data
+ */
 export const updateOrder = async (data: { order_id: string; data: any }) => {
   let delivery_ref = doc(DB, DBCollections.ORDERS, data.order_id);
   await updateDoc(delivery_ref, data.data);
