@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { getOrder, updateOrder } from "../../../api";
 
-export default function Payment() {
+export default function Invoice() {
   const { id } = useParams();
   const { data, refetch } = useQuery(["order", id], getOrder);
   const update_order = useMutation(updateOrder, {

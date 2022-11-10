@@ -13,6 +13,7 @@ import {
   AiFillCloseCircle,
 } from "react-icons/ai";
 import { QueryKey, useMutation, useQuery, useQueryClient } from "react-query";
+import { Link } from "react-router-dom";
 import { changeState } from "../../../api";
 import { SearchBar } from "../../../components/searchbar";
 import { DBCollections, OrderStates } from "../../../definitions";
@@ -206,9 +207,12 @@ export default function Orders() {
                       )}
                       {status === OrderStates.COMPLETED && (
                         <td>
-                          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-7 mr-2 rounded-2xl">
+                          <Link
+                            to={`/procurement/invoice/${d.id}`}
+                            className="block text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-7 mr-2 rounded-2xl"
+                          >
                             Proceed to Payment
-                          </button>
+                          </Link>
                         </td>
                       )}
                     </tr>

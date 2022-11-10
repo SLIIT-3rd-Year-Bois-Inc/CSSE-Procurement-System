@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { Portal } from "react-portal";
 import { useQuery } from "react-query";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getOrder } from "../../../api";
 import AddDeliveryModal from "../../../components/add-delivery-modal";
 import Delivery from "../../../components/delivery";
 import OrderElement from "../../../components/order-elements";
-import { DeliveryStates } from "../../../definitions";
 
 export default function ManageOrder() {
   const { id } = useParams();

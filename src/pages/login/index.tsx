@@ -5,8 +5,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { loginSchema } from "../../schema";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-export function Login() {
+interface LoginProps {
+  supplier?: boolean;
+}
+
+export function Login({ supplier }: LoginProps) {
   const {
     register,
     handleSubmit,
@@ -20,6 +25,11 @@ export function Login() {
   const login = async (data: any) => {
     try {
       await signInWithEmailAndPassword(Auth, data.email, data.password);
+      if (supplier) {
+        navigate("/supplier/delivery-tracking");
+        return;
+      }
+
       navigate("/delivery-tracking");
     } catch (e) {
       console.error(e);
@@ -35,7 +45,9 @@ export function Login() {
   return (
     <div className="w-full h-full flex flex-col items-center">
       <div>
-        <h2 className="text-3xl mb-[4em] mt-[5em] font-bold">Site Manager</h2>
+        <h2 className="text-3xl mb-[4em] mt-[5em] font-bold">
+          {supplier ? "Supplier" : "Site Manager"}
+        </h2>
       </div>
       <form
         onSubmit={handleSubmit(login)}
@@ -60,14 +72,24 @@ export function Login() {
         <div className="text-red-600 p-1 text-center">
           {errors.password?.message as string}
         </div>
-        <button
-          type="submit"
-          className="py-2 mt-6 px-8 bg-[#0097d4] text-white rounded flex-shrink"
-        >
-          Login
-        </button>
+        <div>
+          <button
+            type="submit"
+            className="py-2 mt-6 px-8 bg-[#0097d4] text-white rounded flex-shrink"
+          >
+            Login
+          </button>
+        </div>
       </form>
       <div className="flex-grow"></div>
+      <div className="mb-4">
+        <Link
+          to={!supplier ? "/supplier/login" : "/login"}
+          className="bg-black text-white p-2 px-4 rounded-xl"
+        >
+          Looking for {!supplier ? `Supplier` : `Site Manager`} login?
+        </Link>
+      </div>
       <div className="mb-8 font-semibold">Procurement System v1.0</div>
     </div>
   );

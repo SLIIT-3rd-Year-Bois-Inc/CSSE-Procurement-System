@@ -10,9 +10,7 @@ export default function TopBar() {
   useEffect(() => {
     Auth.onAuthStateChanged(async (data) => {
       if (data) {
-        let user = await getDoc(
-          doc(DB, DBCollections.USERS, data.uid)
-        );
+        let user = await getDoc(doc(DB, DBCollections.USERS, data.uid));
         if (user && user.data()) {
           setUsername((user.data() as any).name);
           return;
@@ -29,7 +27,7 @@ export default function TopBar() {
       <div className="flex-grow"></div>
       <div className="flex flex-row justify-center items-center">
         <div className="mr-4">{username}</div>
-        <img src="/user-placeholder.png" className="w-12" alt="Profile Image" />
+        <img src="/user-placeholder.png" className="w-12" alt="Profile" />
       </div>
     </div>
   );
