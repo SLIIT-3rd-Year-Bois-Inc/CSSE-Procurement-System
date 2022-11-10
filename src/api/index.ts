@@ -1,6 +1,7 @@
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   DocumentData,
   getDoc,
@@ -158,6 +159,25 @@ export const updateDelivery = async (data: {
     data.delivery_id
   );
   await updateDoc(delivery_ref, data.data);
+};
+
+export const deleteOrder = async (data: { order_id: string }) => {
+  let order_ref = doc(DB, DBCollections.ORDERS, data.order_id);
+  await deleteDoc(order_ref);
+};
+
+export const deleteDelivery = async (data: {
+  order_id: string;
+  delivery_id: string;
+}) => {
+  let delivery_ref = doc(
+    DB,
+    DBCollections.ORDERS,
+    data.order_id,
+    DBCollections.DELIVERIES,
+    data.delivery_id
+  );
+  await deleteDoc(delivery_ref);
 };
 
 export const updateOrder = async (data: { order_id: string; data: any }) => {

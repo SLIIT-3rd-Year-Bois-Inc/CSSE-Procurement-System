@@ -1,5 +1,9 @@
 import React from "react";
 import { BsCartCheck } from "react-icons/bs";
+import { TiClipboard } from "react-icons/ti";
+import { BiPackage } from "react-icons/bi";
+import { SiPodman } from "react-icons/si";
+import { FiUser } from "react-icons/fi";
 
 export default function SideBar() {
   return (
@@ -13,19 +17,19 @@ export default function SideBar() {
         Orders
       </SideBarItem>
       <SideBarItem>
-        <BsCartCheck className="mr-3" />
+        <TiClipboard className="mr-3" />
         Transactions
       </SideBarItem>
       <SideBarItem>
-        <BsCartCheck className="mr-3" />
+        <BiPackage className="mr-3" />
         Products
       </SideBarItem>
       <SideBarItem>
-        <BsCartCheck className="mr-3" />
+        <SiPodman className="mr-3" />
         Supplier
       </SideBarItem>
       <SideBarItem>
-        <BsCartCheck className="mr-3" />
+        <FiUser className="mr-3" />
         Users
       </SideBarItem>
       <div className="flex-grow"></div>
