@@ -10,7 +10,7 @@ import {
   where,
 } from "firebase/firestore";
 import { QueryKey } from "react-query";
-import { DBCollections, DeliveryStates } from "../definitions";
+import { DBCollections } from "../definitions";
 import { OrderDoesNotExist } from "../errors";
 import { DB } from "../firebase";
 
