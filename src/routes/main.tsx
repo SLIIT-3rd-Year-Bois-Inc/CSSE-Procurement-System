@@ -6,6 +6,7 @@ import DeliveryTracking from "../pages/delivery-tracking";
 import Dashboard from "../pages/desktop/dashboard";
 import ProcurementLogin from "../pages/desktop/login";
 import Orders from "../pages/desktop/orders";
+import Payment from "../pages/desktop/payment";
 import { Login } from "../pages/login";
 import { Products } from "../pages/products";
 import SupplierDeliveryTracking from "../pages/supplier/delivery-tracking";
@@ -14,7 +15,9 @@ import ManageOrder from "../pages/supplier/manage-order";
 export function MainRouter() {
   const navigate = useNavigate();
   const apply_mobile_styles = () => {
-    document.head.innerHTML = document.head.innerHTML + `
+    document.head.innerHTML =
+      document.head.innerHTML +
+      `
       <style type="text/css">
         *{
           -webkit-touch-callout: none; /* iOS Safari */
@@ -26,18 +29,18 @@ export function MainRouter() {
                                   supported by Chrome, Edge, Opera and Firefox */
         }
       </style>
-    `
-  }
+    `;
+  };
 
   useEffect(() => {
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      console.log('display-mode is standalone');
+    if (window.matchMedia("(display-mode: standalone)").matches) {
+      console.log("display-mode is standalone");
       navigate("/login");
       apply_mobile_styles();
     }
 
-    window.addEventListener('appinstalled', (evt) => {
-      console.log('a2hs installed');
+    window.addEventListener("appinstalled", (evt) => {
+      console.log("a2hs installed");
       navigate("/login");
       apply_mobile_styles();
     });
@@ -51,12 +54,16 @@ export function MainRouter() {
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/products" element={<Products />} />
-      <Route path="/supplier/delivery-tracking" element={<SupplierDeliveryTracking />} />
+      <Route
+        path="/supplier/delivery-tracking"
+        element={<SupplierDeliveryTracking />}
+      />
       <Route path="/supplier/orders/:id" element={<ManageOrder />} />
 
       <Route path="/procurement/login" element={<ProcurementLogin />} />
       <Route path="/procurement" element={<Dashboard />}>
         <Route path="order" element={<Orders />} />
+        <Route path="invoice/:id" element={<Payment />} />
       </Route>
       <Route path="*" element={<Navigate to="/procurement/login" replace />} />
     </Routes>

@@ -20,7 +20,7 @@ it("validates email properly", () => {
     cy.get('input[type=password]').type("qwertyuiop123#")
     cy.get('button[type=submit]').click()
     cy.get("div").contains(/must be a valid email/).should('exist')
-})
+});
 
 it("validates password properly", () => {
     cy.visit("/login");
@@ -28,4 +28,4 @@ it("validates password properly", () => {
     cy.get('input[type=password]').type("qw")
     cy.get('button[type=submit]').click()
     cy.get("div").contains(/at least 6/).should('exist')
-})
+});

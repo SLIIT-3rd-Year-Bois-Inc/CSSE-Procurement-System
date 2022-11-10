@@ -1,10 +1,4 @@
-import {
-  collection,
-  getDocs,
-  limit,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, getDocs, limit, query, where } from "firebase/firestore";
 import React, { useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
@@ -35,7 +29,7 @@ export function Products() {
         return { ...d.data(), id: d.id };
       });
 
-      console.log(data);
+      // console.log(data);
       setProducts(data);
     } catch (e) {
       console.error(e);

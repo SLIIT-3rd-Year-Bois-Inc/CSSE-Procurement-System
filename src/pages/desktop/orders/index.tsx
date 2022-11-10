@@ -12,12 +12,7 @@ import {
   AiFillCheckCircle,
   AiFillCloseCircle,
 } from "react-icons/ai";
-import {
-  QueryKey,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "react-query";
+import { QueryKey, useMutation, useQuery, useQueryClient } from "react-query";
 import { changeState } from "../../../api";
 import { SearchBar } from "../../../components/searchbar";
 import { DBCollections, OrderStates } from "../../../definitions";
@@ -70,11 +65,11 @@ export default function Orders() {
         const site = await getDoc(doc(DB, DBCollections.SITES, doc_data.site));
         const site_data: any = site.data();
 
-        if(site_data && site_data.name) {
+        if (site_data && site_data.name) {
           site_map.set(doc_data.site, site_data);
           doc_data.site_name = site_data.name;
         } else {
-          doc_data.site_name = "[Site does not exist]"
+          doc_data.site_name = "[Site does not exist]";
         }
       }
 
@@ -108,8 +103,8 @@ export default function Orders() {
     ["orders", status],
     getAllOrders
   );
-  
-  const show_column = status != OrderStates.APPROVED;
+
+  const show_column = status === OrderStates.PENDING;
 
   return (
     <div className="w-full h-full">
@@ -168,7 +163,7 @@ export default function Orders() {
               <th className="font-normal px-4">Delivery Date</th>
               <th className="font-normal px-4">Bank Account</th>
               <th className="font-normal px-4">Total</th>
-              { show_column && <th></th>}
+              {show_column && <th></th>}
             </tr>
             {isSuccess
               ? data.map((d, i) => {
@@ -181,34 +176,41 @@ export default function Orders() {
                       <td>{toDateOnly(new Date(d.delivery_date.seconds))}</td>
                       <td>{d.bank_name}</td>
                       <td>{d.total}</td>
-                      {
-                         show_column && <td>
-                        <div className="p-1 flex">
-                          <AiFillCheckCircle
-                            onClick={() => {
-                              mutate({
-                                status: OrderStates.APPROVED,
-                                order_id: d.id,
-                              });
-                            }}
-                            size={32}
-                            color="#75f94c"
-                            className="mr-2 cursor-pointer"
-                          />
-                          <AiFillCloseCircle
-                            onClick={() => {
-                              mutate({
-                                status: OrderStates.DECLINED,
-                                order_id: d.id,
-                              });
-                            }}
-                            size={32}
-                            color="#eb3223"
-                            className="cursor-pointer"
-                          />
-                        </div>
-                      </td>
-                      }
+                      {show_column && (
+                        <td>
+                          <div className="p-1 flex">
+                            <AiFillCheckCircle
+                              onClick={() => {
+                                mutate({
+                                  status: OrderStates.APPROVED,
+                                  order_id: d.id,
+                                });
+                              }}
+                              size={32}
+                              color="#75f94c"
+                              className="mr-2 cursor-pointer"
+                            />
+                            <AiFillCloseCircle
+                              onClick={() => {
+                                mutate({
+                                  status: OrderStates.DECLINED,
+                                  order_id: d.id,
+                                });
+                              }}
+                              size={32}
+                              color="#eb3223"
+                              className="cursor-pointer"
+                            />
+                          </div>
+                        </td>
+                      )}
+                      {status === OrderStates.COMPLETED && (
+                        <td>
+                          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-7 mr-2 rounded-2xl">
+                            Proceed to Payment
+                          </button>
+                        </td>
+                      )}
                     </tr>
                   );
                 })

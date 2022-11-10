@@ -6,7 +6,7 @@ enum OrderStates {
   RETUREND = "returned",
   REJECTED = "rejected",
   COMPLETED = "completed",
-  DRAFT = "draft"
+  DRAFT = "draft",
 }
 
 enum DBCollections {
@@ -16,18 +16,19 @@ enum DBCollections {
   SITES = "sites",
   BANK_ACCOUNTS = "bank_accounts",
   COUNTERS = "counters",
-  DELIVERIES = "deliveries"
+  DELIVERIES = "deliveries",
+  SUPPLIERS = "suppliers",
 }
 
 enum Counters {
-  ORDER_COUNTER = "order-counter"
+  ORDER_COUNTER = "order-counter",
 }
 
 export enum DeliveryStates {
   ACCEPTED = "accepted",
   RETURNED = "returned",
   COMPLETED = "completed",
-  NOT_INITIATED = "not_initiated"
+  NOT_INITIATED = "not_initiated",
 }
 
 export { OrderStates, DBCollections, Counters };
