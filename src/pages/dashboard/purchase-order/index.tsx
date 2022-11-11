@@ -2,7 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { addDoc, collection, doc, getDocs, runTransaction, setDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  runTransaction,
+  setDoc,
+} from "firebase/firestore";
 import { DB } from "../../../firebase";
 import { useQuery } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
@@ -53,17 +60,19 @@ export default function PurchaseOrder() {
       dispatch(updatePOdraft(data));
     });
   }, []);
-  
+
   useEffect(() => {
-    (selected_product && selected_product.id) && setValue('item', selected_product.id);
-  }, [selected_product])
+    selected_product &&
+      selected_product.id &&
+      setValue("item", selected_product.id);
+  }, [selected_product]);
 
   const submit = async (data: any, draft: boolean) => {
     if (selected_product.price) {
       // Calculate total
       data.total = selected_product.price * data.quantity;
 
-      if(!draft) {
+      if (!draft) {
         // Set default state
         data.status = OrderStates.PENDING;
       } else {
@@ -71,7 +80,11 @@ export default function PurchaseOrder() {
       }
 
       await runTransaction(DB, async (transaction) => {
-        const counter_ref = doc(DB, DBCollections.COUNTERS, Counters.ORDER_COUNTER);
+        const counter_ref = doc(
+          DB,
+          DBCollections.COUNTERS,
+          Counters.ORDER_COUNTER
+        );
         let counter_doc = await transaction.get(counter_ref);
         let new_doc_ref = doc(collection(DB, DBCollections.ORDERS));
 
@@ -81,7 +94,7 @@ export default function PurchaseOrder() {
 
         let new_count = 1;
         let counter_data = counter_doc.data();
-        if (counter_data) { 
+        if (counter_data) {
           new_count = counter_data.count + 1;
         }
 
@@ -90,11 +103,12 @@ export default function PurchaseOrder() {
         data.number = new_count;
 
         await transaction.set(new_doc_ref, data);
-      })
+      });
 
       dispatch(updatePOdraft({}));
       reset({});
       console.log("submit");
+      navigate("/delivery-tracking");
       // TODO - Navigate somewhere
     }
   };
@@ -120,10 +134,7 @@ export default function PurchaseOrder() {
   let accounts_query = useQuery(["accounts"], getAccounts);
 
   return (
-    <form
-      onSubmit={(e) => e.preventDefault()}
-      className="p-4 w-full"
-    >
+    <form onSubmit={(e) => e.preventDefault()} className="p-4 w-full">
       <div className="font-bold">Items</div>
       <div>
         <label
@@ -304,10 +315,19 @@ export default function PurchaseOrder() {
       <div></div>
       <div className="flex justify-center items-center flex-col">
         <div className="mb-2">
-          <button onClick={() => {reset(); dispatch(updatePOdraft({}))}} className="text-blue-500 border-2 border-[#0097d4] hover:bg-blue-700 hover:text-white bg-white font-bold py-2 px-7 mr-2 rounded-2xl">
+          <button
+            onClick={() => {
+              reset();
+              dispatch(updatePOdraft({}));
+            }}
+            className="text-blue-500 border-2 border-[#0097d4] hover:bg-blue-700 hover:text-white bg-white font-bold py-2 px-7 mr-2 rounded-2xl"
+          >
             Reset
           </button>
-          <button onClick={handleSubmit((data) => submit(data, true))} className="text-blue-500 border-2 border-[#0097d4] hover:bg-blue-700 hover:text-white font-bold py-2 px-7 rounded-2xl">
+          <button
+            onClick={handleSubmit((data) => submit(data, true))}
+            className="text-blue-500 border-2 border-[#0097d4] hover:bg-blue-700 hover:text-white font-bold py-2 px-7 rounded-2xl"
+          >
             Draft
           </button>
         </div>

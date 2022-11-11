@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useQuery } from "react-query";
+import { Link } from "react-router-dom";
 import { getAllOrders } from "../../api";
 import Chip from "../../components/chip";
 import OrderElementWithDeliveries from "../../components/order-element-with-deliveries";
@@ -75,6 +76,14 @@ export default function DeliveryTracking() {
               />
             );
           })}
+      </div>
+      <div>
+        <Link
+          to="/order"
+          className="block text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-7 mr-2 rounded-2xl"
+        >
+          Add a Purchase Order
+        </Link>
       </div>
     </div>
   );
