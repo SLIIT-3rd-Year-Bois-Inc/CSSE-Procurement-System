@@ -55,6 +55,7 @@ export default function SupplierDeliveryTracking() {
             return (
               <OrderElement
                 onChangeState={onOrderStateChange}
+                order_id={order.id}
                 item={order.item_name}
                 number={order.number}
                 quantity={order.quantity}

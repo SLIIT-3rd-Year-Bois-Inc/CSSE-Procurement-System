@@ -79,6 +79,10 @@ export default function PurchaseOrder() {
         data.status = OrderStates.DRAFT;
       }
 
+      if (data.total < 100000 && !draft) {
+        data.status = OrderStates.APPROVED;
+      }
+
       await runTransaction(DB, async (transaction) => {
         const counter_ref = doc(
           DB,
